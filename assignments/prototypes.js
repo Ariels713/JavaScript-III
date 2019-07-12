@@ -15,16 +15,20 @@
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
-function GameObject(createdAt, name, dimensions){
-  this.createdAt = createdAt;
-  this.name = name;
-  this.dimensions = dimensions;
+
+class GameObject {
+  constructor(user, createdAt, dimensions){
+    this.createdAt = createdAt;
+    this.user = user;
+    this.dimensions = dimensions;
+  }
+  destroy(){
+    return `${this.user} was removed from the game. ${this.createdAt}`
+     }
 }
 
-GameObject.prototype.destroy = function(){
-  return `${this.name} was removed from the game.`
-}
-
+const ariel = new GameObject(`Ariel`, 5, 5)
+console.log(ariel.destroy())
 
 
 /*
@@ -33,17 +37,19 @@ GameObject.prototype.destroy = function(){
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
-function CharacterStats(healthPoints){
-  this.healthPoints = healthPoints;
+class CharacterStats extends GameObject {
+  constructor(user, createdAt, dimensions, healthPoints){
+    super(user, createdAt, dimensions);
+    this.healthPoints = healthPoints;
+  }
+
+  takeDamage(){
+    console.log(`${this.user} took damage. ${this.healthPoints}`)
+  }
 }
-CharacterStats.prototype = new GameObject();
-CharacterStats.prototype.constructor = CharacterStats;
 
-CharacterStats.prototype.takeDamage = function(){
-  return `${this.name} took damage`
-}
-
-
+const ellie = new CharacterStats('Ellie', 5, 5, 5);
+//?
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -53,20 +59,24 @@ CharacterStats.prototype.takeDamage = function(){
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
-function Humanoid(team, weapons, language){
-  this.team = team;
-  this.weapons = weapons;
-  this.language = language;
-}
+class Humanoid extends CharacterStats {
+  constructor(user, createdAt, dimensions, healthPoints, team, weapons, language){
+    super(user, createdAt, dimensions, healthPoints, team, weapons, language);
+    this.team = team;
+    this.weapons = weapons;
+    this.language = language;
+  }
 
-Humanoid.prototype = new CharacterStats();
-//Humanoid.prototype.constructor = Humanoid;
+  greet(){
+    console.log(`${this.user} offers a greeting in ${this.language}`);
+  }
 
-Humanoid.prototype.greet = function(){
-  return `${this.name} offers a greeting in ${this.language}`;
 }
+const lauren = new Humanoid(`Lauren`)
+console.log(lauren.takeDamage())//?
 
  
+
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -76,66 +86,66 @@ Humanoid.prototype.greet = function(){
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
 
-  const mage = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 2,
-      width: 1,
-      height: 1,
-    },
-    healthPoints: 5,
-    name: 'Bruce',
-    team: 'Mage Guild',
-    weapons: [
-      'Staff of Shamalama',
-    ],
-    language: 'Common Tongue',
-  });
+  // const mage = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 2,
+  //     width: 1,
+  //     height: 1,
+  //   },
+  //   healthPoints: 5,
+  //   name: 'Bruce',
+  //   team: 'Mage Guild',
+  //   weapons: [
+  //     'Staff of Shamalama',
+  //   ],
+  //   language: 'Common Tongue',
+  // });
 
-  const swordsman = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 2,
-      width: 2,
-      height: 2,
-    },
-    healthPoints: 15,
-    name: 'Sir Mustachio',
-    team: 'The Round Table',
-    weapons: [
-      'Giant Sword',
-      'Shield',
-    ],
-    language: 'Common Tongue',
-  });
+  // const swordsman = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 2,
+  //     width: 2,
+  //     height: 2,
+  //   },
+  //   healthPoints: 15,
+  //   name: 'Sir Mustachio',
+  //   team: 'The Round Table',
+  //   weapons: [
+  //     'Giant Sword',
+  //     'Shield',
+  //   ],
+  //   language: 'Common Tongue',
+  // });
 
-  const archer = new Humanoid({
-    createdAt: new Date(),
-    dimensions: {
-      length: 1,
-      width: 2,
-      height: 4,
-    },
-    healthPoints: 10,
-    name: 'Lilith',
-    team: 'Forest Kingdom',
-    weapons: [
-      'Bow',
-      'Dagger',
-    ],
-    language: 'Elvish',
-  });
+  // const archer = new Humanoid({
+  //   createdAt: new Date(),
+  //   dimensions: {
+  //     length: 1,
+  //     width: 2,
+  //     height: 4,
+  //   },
+  //   healthPoints: 10,
+  //   name: 'Lilith',
+  //   team: 'Forest Kingdom',
+  //   weapons: [
+  //     'Bow',
+  //     'Dagger',
+  //   ],
+  //   language: 'Elvish',
+  // });
 
-  console.log(mage.createdAt); // Today's date
-  console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-  console.log(swordsman.healthPoints); // 15
-  console.log(mage.name); // Bruce
-  console.log(swordsman.team); // The Round Table
-  console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
-  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-  console.log(mage.takeDamage()); // Bruce took damage.
-  console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+  // console.log(mage.createdAt); // Today's date
+  // console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
+  // console.log(swordsman.healthPoints); // 15
+  // console.log(mage.name); // Bruce
+  // console.log(swordsman.team); // The Round Table
+  // console.log(mage.weapons); // Staff of Shamalama
+  // console.log(archer.language); // Elvish
+  // console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  // console.log(mage.takeDamage()); // Bruce took damage.
+  // console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
 
   // Stretch task: 
